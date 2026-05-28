@@ -7,6 +7,7 @@ import { APIResponseProps } from '@/components/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateThemeSettings } from '../GlobalRedux/theme/themeSlice';
 import { getComponent } from '@/components/registry';
+import { RootState } from '../GlobalRedux/store';
 
 export const dynamic = 'force-dynamic';   // This forces fresh data on every request (no caching) 
 
@@ -14,6 +15,7 @@ const LivePreviewPage = () => {
 
     const dispatch = useDispatch();
     const searchParams = useSearchParams();
+
     const company_id = searchParams?.get("company_id") as string || "";
     const agent_id = searchParams?.get("agent_id") as string || "";
     const company_unique_id = searchParams?.get("company_unique_id") as string || "";
@@ -117,7 +119,7 @@ const LivePreviewPage = () => {
             )}
 
             <main className="w-full">
-                <PageRenderer data={pageData} />;
+                <PageRenderer data={pageData} is_theme={true} />;
             </main>
 
             {/* Dynamic Footer */}

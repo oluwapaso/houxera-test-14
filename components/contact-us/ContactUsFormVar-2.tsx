@@ -2,18 +2,17 @@
 
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BiPhoneCall, BiSend } from 'react-icons/bi'
-import { FaMapMarkerAlt } from 'react-icons/fa'
+import { BiEnvelope, BiLayerPlus, BiMapPin, BiPhoneCall, BiPhoneIncoming, BiRefresh, BiSend } from 'react-icons/bi'
 import FloatingInput from '@/components/FloatingInput'
 import FloatingTextarea from '@/components/FloatingTextarea'
 import { toast } from 'react-toastify'
 import { Helpers } from '@/_lib/helper'
 import { RootState } from '@/app/GlobalRedux/store'
 import { hidePageLoader, showPageLoader } from '@/app/GlobalRedux/app/appSlice'
-import { BsGear } from 'react-icons/bs'
+import { BsArrowDown, BsArrowUp, BsGear } from 'react-icons/bs'
 
 const helpers = new Helpers();
-const ContactUsFormVar1 = ({ is_theme = false, raw_data = {} }: { is_theme?: boolean, raw_data?: any }) => {
+const ContactUsVarForm2 = ({ is_theme = false, raw_data = {} }: { is_theme?: boolean, raw_data?: any }) => {
 
     const dispatch = useDispatch();
     const brker_info = useSelector((state: RootState) => state.broker);
@@ -39,15 +38,39 @@ const ContactUsFormVar1 = ({ is_theme = false, raw_data = {} }: { is_theme?: boo
             {
                 type: 'OPEN_EDITOR_SETTINGS',
                 data: {
-                    "category": "featured_listings",
+                    "category": "contact_us_form",
                     "type": "section",
-                    "component": "FeaturedListsingsVar1",
+                    "component": "ContactUsVarForm2",
                     ...raw_data,
                 }
             },
             '*' // In production, replace '*' with your parent URL for security
         );
     };
+
+    const handleMoveClick = (direction: string) => {
+        // Send a message to the parent window
+        window.parent.postMessage(
+            {
+                type: 'MOVE_SECTION',
+                direction: direction,
+                index: raw_data?.component_index
+            },
+            '*' // In production, replace '*' with your parent URL for security
+        );
+    }
+
+    const handleCompPickerClick = () => {
+        // Send a message to the parent window
+        window.parent.postMessage(
+            {
+                type: 'REPLACE_SECTION',
+                component_index: raw_data?.component_index,
+                component_type: "Contact Form"
+            },
+            '*' // In production, replace '*' with your parent URL for security
+        );
+    }
 
     const handleHover = () => {
         setSectionHover(true);
@@ -77,15 +100,6 @@ const ContactUsFormVar1 = ({ is_theme = false, raw_data = {} }: { is_theme?: boo
             return {
                 ...prevVal,
                 [e.target.name]: newValue
-            }
-        })
-    }
-
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setFormData((prevVal: any) => {
-            return {
-                ...prevVal,
-                inquiry: e.target.value
             }
         })
     }
@@ -180,52 +194,26 @@ const ContactUsFormVar1 = ({ is_theme = false, raw_data = {} }: { is_theme?: boo
 
     if (themeSett) {
         return (
-            <section className="w-full pt-50 pb-20 relative">
-                <div className={`container mx-auto max-w-[1150px] flex flex-col  
-                ${(is_theme && sectionHover) ? "p-[10px] border-2 border-sky-800 transition-all duration-300" : null}`}>
+            <section className={`w-full pt-20 pb-20 relative `}>
+                <div className={`container mx-auto max-w-[1150px] grid grid-cols-2 gap 8
+                    ${(is_theme && sectionHover) ? "p-[10px] border-2 border-sky-800 transition-all duration-300" : null}`}>
+                    <div data-has-bg="yes" className="relative overflow-hidden rounded-2xl shadow-2xl"
+                        style={{
+                            backgroundSize: `cover`,
+                            backgroundRepeat: `none`,
+                            backgroundImage: "url('/ave-maria_low.jpg')",
+                        }}>
 
-                    <div className=" grid grid-cols-2 gap-8">
+                        <div className="absolute w-full h-full z-10 bg-gradient-to-t from-transparent to-black/50 from-80%"></div>
+                        <div className="absolute w-full h-full z-10 bg-gradient-to-b from-transparent to-black/50 from-80%"></div>
+                    </div>
 
-                        <div className=" flex flex-col">
-                            <div className="font-bold text-3xl">{raw_data.header || "Let's talk?"}</div>
-                            <div className='leading-6 mt-2'>
-                                {raw_data.sub_header || "It's all about the humans behind a brand and those experiencing it, we're right there. In the middle."}
-                            </div>
-
-                            <div className='grid grid-cols-2 gap-6 divide-x divide-gray-300 mt-14 
-                                *:flex *:items-center *:space-x-5'>
-                                <div className=''>
-                                    <div className='shrink-0 relative'>
-                                        <div className=" size-14 hover:shadow-2xl bg-icons-primary flex items-center justify-center text-white cursor-pointer
-                                             rounded-full after:size-18 after:absolute after:rounded-full after:bg-icons-primary/50 after:-z-0 ">
-                                            <FaMapMarkerAlt size={28} className=" relative z-10" />
-                                        </div>
-                                    </div>
-
-                                    <div className='flex flex-col space-y-1'>
-                                        <div>{brker_info?.contact_info?.address},</div>
-                                        <div>{brker_info?.contact_info?.address_2},</div>
-                                        <div>{brker_info?.contact_info?.city} {brker_info?.contact_info?.state}.</div>
-                                    </div>
-                                </div>
-
-
-                                <div>
-                                    <div className='shrink-0 relative'>
-                                        <div className=" size-14 hover:shadow-2xl bg-icons-primary flex items-center justify-center text-white cursor-pointer
-                                             rounded-full after:size-18 after:absolute after:rounded-full after:bg-icons-primary/50 after:-z-0 ">
-                                            <BiPhoneCall size={28} className=" relative z-10" />
-                                        </div>
-                                    </div>
-
-                                    <div className=' flex flex-col space-y-1'>
-                                        <div>{brker_info?.contact_info?.phone_cell}</div>
-                                        <div>{brker_info?.contact_info?.phone_local}</div>
-                                        <div>{brker_info?.contact_info?.phone_toll_free}</div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div className=" flex flex-col justify-center px-8">
+                        <div className="font-bold text-3xl">{raw_data.header || "Let's talk?"}</div>
+                        <div className='leading-6 mt-2'>
+                            {raw_data.sub_header || "It's all about the humans behind a brand and those experiencing it, we're right there. In the middle."}
                         </div>
+
 
                         <div className='w-full flex flex-col space-y-5 mt-4'>
                             <div className='grid grid-cols-2 gap-4'>
@@ -264,15 +252,80 @@ const ContactUsFormVar1 = ({ is_theme = false, raw_data = {} }: { is_theme?: boo
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <div className=' pt-20 pb-5 col-span-full grid grid-cols-3 *:flex *:flex-col *:space-y-2 *:items-center *:justify-center'>
+                        <div>
+                            <div className=' size-[60px] rounded-md bg-amber-100 text-amber-600 flex items-center justify-center'>
+                                <BiMapPin size={30} />
+                            </div>
+
+                            <div className='font-semibold text-lg'>Address</div>
+                            <div className='text-gray-500 font-medium'>
+                                {brker_info?.contact_info?.address}, {brker_info?.contact_info?.address_2},
+                                {brker_info?.contact_info?.city} {brker_info?.contact_info?.state}.
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className=' size-[60px] rounded-md bg-green-100 text-green-600 flex items-center justify-center'>
+                                <BiPhoneIncoming size={30} />
+                            </div>
+
+                            <div className='font-semibold text-lg'>Contact</div>
+                            <div className='text-gray-500 font-medium'>
+                                {brker_info?.contact_info?.phone_cell},
+                                {brker_info?.contact_info?.phone_local},
+                                {brker_info?.contact_info?.phone_toll_free}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className=' size-[60px] rounded-md bg-sky-100 text-sky-600 flex items-center justify-center'>
+                                <BiEnvelope size={30} />
+                            </div>
+
+                            <div className='font-semibold text-lg'>Email</div>
+                            <div className='text-gray-500 font-medium'>
+                                {brker_info?.email},
+                                {brker_info?.departments_info?.support_email}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {is_theme && (
-                    <div id='editor_settings' className=' absolute z-[1000] right-1.5 top-20 bg-gray-200 text-gray-800 flex items-center 
-                    justify-center p-2 rounded cursor-pointer hover:shadow-2xl'
-                        onClick={handleSettingsClick} onMouseOver={handleHover} onMouseOut={handleMouseExist}>
-                        <BsGear size={17} />
+                    <div className=' absolute z-[1000] right-1.5 top-20 space-x-2 flex items-center justify-end *:bg-gray-800 
+                    *:text-white *:flex *:items-center *:justify-center *:p-2 *:rounded *:cursor-pointer'>
+
+                        <div id='editor_settings' className='hover:shadow-2xl'
+                            onClick={handleSettingsClick} onMouseOver={handleHover} onMouseOut={handleMouseExist}>
+                            <BsGear size={17} />
+                        </div>
+
+                        <div id='editor_settings' className='hover:shadow-2xl'
+                            onClick={handleCompPickerClick} onMouseOver={handleHover} onMouseOut={handleMouseExist}>
+                            <BiRefresh size={17} />
+                        </div>
+
+                        <div id='editor_settings' className='hover:shadow-2xl'
+                            onClick={() => handleMoveClick("UP")} onMouseOver={handleHover} onMouseOut={handleMouseExist}>
+                            <BsArrowUp size={17} />
+                        </div>
+
+                        <div id='editor_settings' className='hover:shadow-2xl'
+                            onClick={() => handleMoveClick("DOWN")} onMouseOver={handleHover} onMouseOut={handleMouseExist}>
+                            <BsArrowDown size={17} />
+                        </div>
+
+                    </div>
+                )}
+
+                {is_theme && (
+                    <div className='absolute z-[1000] w-full bottom-1.5 flex items-center justify-center'>
+                        <div className='p-2 bg-primary text-white hover:shadow-2xl rounded cursor-pointer flex items-center justify-center'>
+                            <BiLayerPlus size={22} />
+                        </div>
                     </div>
                 )}
             </section>
@@ -281,4 +334,4 @@ const ContactUsFormVar1 = ({ is_theme = false, raw_data = {} }: { is_theme?: boo
 
 }
 
-export default ContactUsFormVar1
+export default ContactUsVarForm2
