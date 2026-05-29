@@ -12,10 +12,12 @@
 
 	export default function ClientPage({ 
 		themeData, 
-		pageData 
+		pageData,
+		googleFontsURL
 	}: { 
 		themeData: any; 
 		pageData: any; 
+		googleFontsURL: string;
 	}) {
  
 		const theme = useSelector((state: RootState) => state.theme); 
@@ -28,10 +30,18 @@
 	        dispatch(hidePageLoader());
 	    }, [dispatch]);
 
-		 useEffect(() => {
-        	console.log("theme.theme_settings?.is_default", theme.theme_settings?.is_default)
-			if (theme.theme_settings?.is_default == "Yes") {
-				console.log("handling initial updateThemeSettings()",themeData.theme_settings)
+		// Load Google Fonts dynamically
+		useEffect(() => {
+			if (googleFontsURL) {
+				const link = document.createElement('link');
+				link.href = googleFontsURL;
+				link.rel = 'stylesheet';
+				document.head.appendChild(link);
+			}
+		}, [googleFontsURL]);
+
+		 useEffect(() => { 
+			if (theme.theme_settings?.is_default == "Yes") { 
 				dispatch(updateThemeSettings(themeData.theme_settings));
 			} 
 		}, [theme.theme_settings?.is_default]); 
