@@ -86,10 +86,10 @@
             "nav_component": "NavVar1",
             "pages": [],
             "primary_color": "green-600",
-            "primary_font": "Poppins",
+            "primary_font": "font-poppins",
             "property_card": "PropertyCard-1",
             "secondary_color": "gray-900",
-            "secondary_font": "Jost",
+            "secondary_font": "font-geist-mono",
             "service_card": "ServiceCard-1",
             "solid_primary_color": "sky-600",
             "solid_secondary_color": "blue-500",
@@ -154,13 +154,13 @@
                 "props": {
                     "button_text": "Send Us Message",
                     "category": "contact_us_form",
-                    "component": "ContactUsFormVar1",
+                    "component": "ContactUsFormVar2",
                     "header": "Want To Talk",
                     "name": "Contact Us Form",
                     "sub_header": "It's all about the humans behind a brand and those experiencing it, we're right there. In the middle.",
                     "type": "section"
                 },
-                "type": "ContactUsFormVar1"
+                "type": "ContactUsFormVar2"
             }
         ],
         "slug": "/contact-us",
@@ -168,5 +168,5 @@
         "uid": "contact-us-001"
     };
 
-		return <ClientPage themeData={themeData} pageData={pageData} />;
+		return <ClientPage themeData={themeData} pageData={pageData} googleFontsURL="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap" />;
 	}
